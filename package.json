@@ -1,7 +1,7 @@
 {
     "name"        : "heightstick",
     "version"     : "0.1.0",
-    "description" : "codebase growth assessment tool",
+    "description" : "Codebase growth assessment tool",
     "keywords"    : [
         "git"
     ],
