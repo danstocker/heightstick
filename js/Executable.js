@@ -31,33 +31,14 @@ var Executable = troop.Base.extend()
             console.info("running >", command);
 
             exec(command, function (err, stdout, stderr) {
-                var parsed = that.parseOutput(stdout, stderr);
-
                 if (err) {
-                    if (parsed) {
-                        deferred.reject(parsed);
-                    } else {
-                        deferred.reject(stdout, stderr);
-                    }
+                    deferred.reject(stdout, stderr);
                 } else {
-                    if (parsed) {
-                        deferred.resolve(parsed);
-                    } else {
-                        deferred.resolve(stdout, stderr);
-                    }
+                    deferred.resolve(stdout, stderr);
                 }
             });
 
             return deferred.promise;
-        },
-
-        /**
-         * @param {string} stdout
-         * @param {string} stderr
-         * @returns {undefined}
-         */
-        parseOutput: function (stdout, stderr) {
-            return undefined;
         }
     });
 

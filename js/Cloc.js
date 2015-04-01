@@ -4,7 +4,6 @@
 var Executable = require('./Executable.js');
 
 /**
- * TODO: Add parse-output.
  * @class
  * @extends troop.Base
  */
