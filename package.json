@@ -19,6 +19,7 @@
         "troop"  : "~0.8.0"
     },
     "files"       : [
+        "js/Collection.js",
         "js/Argv.js",
         "js/DateInterval.js",
         "js/DateIntervals.js",
