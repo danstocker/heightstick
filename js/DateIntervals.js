@@ -71,9 +71,9 @@ var DateIntervals = troop.Base.extend()
             var date = new Date(this.startDate),
                 nextDate;
 
-            while (+date < this.endDate) {
+            while (+date < +this.endDate) {
                 nextDate = this._addUnit(date);
-                this.dateIntervalCollection.setItem(+nextDate, DateInterval.create(date, nextDate));
+                this.dateIntervalCollection.setItem(nextDate.toISOString(), DateInterval.create(date, nextDate));
                 date = nextDate;
             }
         }
