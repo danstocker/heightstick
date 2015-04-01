@@ -34,19 +34,21 @@ var AuthorsParser = troop.Base.extend()
             var that = this,
                 lines = authorsOutput.match(that.RE_AUTHORS_LINE);
 
-            return lines.toCollection()
-                .mapValues(function (line) {
-                    var row = line.match(that.RE_AUTHORS_ROW_EXTRACTOR);
-                    return {
-                        commits: parseInt(row[1], 10),
-                        name   : row[2],
-                        email  : row[3]
-                    };
-                })
-                .mapKeys(function (author) {
-                    return author.email;
-                })
-                .items;
+            return lines ?
+                lines.toCollection()
+                    .mapValues(function (line) {
+                        var row = line.match(that.RE_AUTHORS_ROW_EXTRACTOR);
+                        return {
+                            commits: parseInt(row[1], 10),
+                            name   : row[2],
+                            email  : row[3]
+                        };
+                    })
+                    .mapKeys(function (author) {
+                        return author.email;
+                    })
+                    .items :
+            {};
         }
     });
 

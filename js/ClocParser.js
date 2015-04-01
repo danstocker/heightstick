@@ -31,28 +31,30 @@ var ClocParser = troop.Base.extend()
          */
         parseCsvOutput: function (clocOutput) {
             var csvLines = clocOutput.match(this.RE_CLOC_CSV_EXTRACTOR),
-                columnIndexByFieldName = csvLines[0].split(',')
+                columnIndexByFieldName = csvLines && csvLines[0].split(',')
                     .toStringDictionary()
                     .reverse();
 
-            return csvLines.slice(1)
-                .toCollection()
+            return csvLines ?
+                csvLines.slice(1)
+                    .toCollection()
 
-                // splitting up lines to rows
-                .mapValues(function (csvLine) {
-                    return csvLine.split(',');
-                })
+                    // splitting up lines to rows
+                    .mapValues(function (csvLine) {
+                        return csvLine.split(',');
+                    })
 
-                // keying by language
-                .mapKeys(function (csvRow) {
-                    return csvRow[columnIndexByFieldName.getItem('language')];
-                })
+                    // keying by language
+                    .mapKeys(function (csvRow) {
+                        return csvRow[columnIndexByFieldName.getItem('language')];
+                    })
 
-                // turning csv rows into json rows
-                .mapValues(function (csvRow) {
-                    return columnIndexByFieldName.combineWith(csvRow.toDictionary()).items;
-                })
-                .items;
+                    // turning csv rows into json rows
+                    .mapValues(function (csvRow) {
+                        return columnIndexByFieldName.combineWith(csvRow.toDictionary()).items;
+                    })
+                    .items :
+            {};
         }
     });
 
