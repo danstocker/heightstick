@@ -96,7 +96,7 @@ var GitRepo = troop.Base.extend()
             return this.checkoutAt(date)
                 .then(function () {
                     console.info("checked out >", that.currentBranch, '@', date.toISOString());
-                    return Cloc.execute(that.clocArguments);
+                    return Cloc.execute([that.clocArguments, '--csv'].join(' '));
                 }, function () {
                     console.error("checkout failed >", that.currentBranch, '@', date.toISOString());
                 });

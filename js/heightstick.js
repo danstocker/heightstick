@@ -6,8 +6,9 @@ require('./Collection.js');
 
 var sntls = require('sntls'),
     Q = require('q'),
-    argv = require('./Argv.js').create(),
     DateIntervals = require('./DateIntervals.js'),
+    ClocParser = require('./ClocParser.js'),
+    argv = require('./Argv.js').create(),
     gitRepo = require('./GitRepo.js').create()
         .setCurrentBranch(argv.getArgumentValue('branch') || 'master')
         .setClocArguments(argv.getArgumentValue('cloc-args') || '. --exclude-dir=node_modules'),
@@ -23,7 +24,7 @@ gitRepo.getFirstCommitDate()
                 return gitRepo.getAuthorsBetween(dateInterval.startDate, dateInterval.endDate);
             });
     })
-    .then(function (authors) {
+    .then(function (/**sntls.Collection*/authors) {
         // TODO: Re-arrange path structure.
         commitData.setNode(['authors'].toPath(), authors.items);
     })
@@ -33,9 +34,13 @@ gitRepo.getFirstCommitDate()
                 return gitRepo.getClocAt(dateInterval.endDate);
             });
     })
-    .then(function (cloc) {
+    .then(function (/**sntls.Collection*/cloc) {
+        var parsed = cloc.mapValues(function (clocOutput) {
+            return ClocParser.parseCsvOutput(clocOutput);
+        });
+
         // TODO: Re-arrange path structure.
-        commitData.setNode(['cloc'].toPath(), cloc);
+        commitData.setNode(['cloc'].toPath(), parsed.items);
 
         console.log(JSON.stringify(commitData.items, null, 2));
     });
