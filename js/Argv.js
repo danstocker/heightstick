@@ -72,6 +72,12 @@ var Argv = troop.Base.extend()
             this.elevateMethod('_extractKeyValuePair');
 
             /** @type {sntls.Collection} */
+            this.flagDescriptions = sntls.Collection.create();
+
+            /** @type {sntls.Collection} */
+            this.optionDescriptions = sntls.Collection.create();
+
+            /** @type {sntls.Collection} */
             this.parsedArguments = this._parseArguments();
         },
 
@@ -81,6 +87,47 @@ var Argv = troop.Base.extend()
          */
         getArgumentValue: function (argumentName) {
             return this.parsedArguments.getItem(argumentName);
+        },
+
+        /**
+         * @param {sntls.Collection} flagDescriptions
+         * @returns {Argv}
+         */
+        setFlagDescriptions: function (flagDescriptions) {
+            this.flagDescriptions = flagDescriptions;
+            return this;
+        },
+
+        /**
+         * @param {sntls.Collection} optionDescriptions
+         * @returns {Argv}
+         */
+        setOptionDescriptions: function (optionDescriptions) {
+            this.optionDescriptions = optionDescriptions;
+            return this;
+        },
+
+        /** @returns {string} */
+        toString: function () {
+            return [
+                "Heightstick Codebase Assesment Tool http://npmjs.org/heightstick",
+                "Commands & Flags:",
+                this.flagDescriptions
+                    .mapValues(function (description, argumentName) {
+                        return " " + argumentName + " : " + description;
+                    })
+                    .getValues()
+                    .join('\n'),
+                "",
+                "Options:",
+                this.optionDescriptions
+                    .mapValues(function (description, argumentName) {
+                        return " --" + argumentName + " : " + description;
+                    })
+                    .getValues()
+                    .join('\n'),
+                ""
+            ].join('\n');
         }
     });
 

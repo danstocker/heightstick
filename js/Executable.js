@@ -28,7 +28,7 @@ var Executable = troop.Base.extend()
                 args = Array.prototype.slice.call(arguments),
                 command = [this.filePath].concat(args).join(' ');
 
-            console.info("running >", command);
+            console.error("running >", command);
 
             exec(command, function (err, stdout, stderr) {
                 if (err) {
