@@ -19,19 +19,21 @@ var sntls = require('sntls'),
 gitRepo.getFirstCommitDate()
     .then(function (firstCommitDate) {
         dateIntervals = DateIntervals.create(firstCommitDate, new Date(), 'month');
-
+    })
+    .then(function () {
         return dateIntervals.dateIntervalCollection
             .mapValuesAsync(function (/**DateInterval*/dateInterval) {
                 return gitRepo.getAuthorsBetween(dateInterval.startDate, dateInterval.endDate);
             });
     })
     .then(function (/**sntls.Collection*/authors) {
-        var parsed = authors.mapValues(function (authorsOutput) {
-            return AuthorsParser.parseTextOutput(authorsOutput);
-        });
-
-        // TODO: Re-arrange path structure. (date, author, name / email / commits)
-        commitData.setNode(['authors'].toPath(), parsed.items);
+        authors
+            .mapValues(function (authorsOutput) {
+                return AuthorsParser.parseTextOutput(authorsOutput);
+            })
+            .forEachItem(function (parsedAuthorsForDate, dateStr) {
+                commitData.setNode([dateStr, 'authors'].toPath(), parsedAuthorsForDate);
+            });
     })
     .then(function () {
         return dateIntervals.dateIntervalCollection
@@ -40,12 +42,14 @@ gitRepo.getFirstCommitDate()
             });
     })
     .then(function (/**sntls.Collection*/cloc) {
-        var parsed = cloc.mapValues(function (clocOutput) {
-            return ClocParser.parseCsvOutput(clocOutput);
-        });
-
-        // TODO: Re-arrange path structure. (date, language, blank / comment / code)
-        commitData.setNode(['cloc'].toPath(), parsed.items);
-
+        cloc
+            .mapValues(function (clocOutput) {
+                return ClocParser.parseCsvOutput(clocOutput);
+            })
+            .forEachItem(function (parsedClocForDate, dateStr) {
+                commitData.setNode([dateStr, 'cloc'].toPath(), parsedClocForDate);
+            });
+    })
+    .then(function () {
         console.log(JSON.stringify(commitData.items, null, 2));
     });
