@@ -5,13 +5,14 @@
 var argv = require('./Argv.js').create(),
     DateIntervals = require('./DateIntervals.js'),
     gitRepo = require('./GitRepo.js').create()
-        .setClocArguments(argv.getArgumentValue('cloc-args') || '.');
+        .setCurrentBranch(argv.getArgumentValue('branch') || 'master')
+        .setClocArguments(argv.getArgumentValue('cloc-args') || '. --exclude-dir=node_modules');
 
 gitRepo.getFirstCommitDate()
     .then(function (firstCommitDate) {
-        console.log(JSON.stringify(DateIntervals.create(firstCommitDate, new Date(), 'month'), null, 2));
+        DateIntervals.create(firstCommitDate, new Date(), 'month');
     }, function () {
-        console.log("getting first commit failed");
+        console.error("getting first commit failed");
     });
 
 //
