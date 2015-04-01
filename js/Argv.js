@@ -5,8 +5,6 @@ var troop = require('troop'),
     sntls = require('sntls'),
     argv = process.argv;
 
-console.log(JSON.stringify(argv, null, 2));
-
 /**
  * @class
  * @extends troop.Base

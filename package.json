@@ -20,6 +20,8 @@
     },
     "files"       : [
         "js/Argv.js",
+        "js/DateInterval.js",
+        "js/DateIntervals.js",
         "js/Executable.js",
         "js/Git.js",
         "js/Cloc.js",

@@ -3,8 +3,11 @@
 'use strict';
 
 var argv = require('./Argv.js').create(),
+    DateIntervals = require('./DateIntervals.js'),
     gitRepo = require('./GitRepo.js').create()
         .setClocArguments(argv.getArgumentValue('cloc-args') || '.');
+
+DateIntervals.create(new Date(+new Date() - 31 * 24 * 3600 * 1000), new Date(), 'week');
 
 gitRepo.getAuthorsBetween(new Date(+new Date() - 31 * 24 * 3600 * 1000), new Date())
     .then(function (stdout) {
