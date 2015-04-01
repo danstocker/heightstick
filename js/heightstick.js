@@ -2,31 +2,40 @@
 /*jshint node:true */
 'use strict';
 
-var argv = require('./Argv.js').create(),
+require('./Collection.js');
+
+var sntls = require('sntls'),
+    Q = require('q'),
+    argv = require('./Argv.js').create(),
     DateIntervals = require('./DateIntervals.js'),
     gitRepo = require('./GitRepo.js').create()
         .setCurrentBranch(argv.getArgumentValue('branch') || 'master')
-        .setClocArguments(argv.getArgumentValue('cloc-args') || '. --exclude-dir=node_modules');
+        .setClocArguments(argv.getArgumentValue('cloc-args') || '. --exclude-dir=node_modules'),
+    dateIntervals,
+    commitData = sntls.Tree.create();
 
 gitRepo.getFirstCommitDate()
     .then(function (firstCommitDate) {
-        DateIntervals.create(firstCommitDate, new Date(), 'month');
-    }, function () {
-        console.error("getting first commit failed");
-    });
+        dateIntervals = DateIntervals.create(firstCommitDate, new Date(), 'month');
 
-//
-//gitRepo.getAuthorsBetween(new Date(+new Date() - 31 * 24 * 3600 * 1000), new Date())
-//    .then(function (stdout) {
-//        console.log("authors ok", stdout);
-//    }, function (stdout) {
-//        console.error("authors error", stdout);
-//    })
-//    .then(function () {
-//        return gitRepo.getClocAt(new Date());
-//    })
-//    .then(function (stdout) {
-//        console.log("cloc ok", stdout);
-//    }, function (stdout) {
-//        console.error("cloc error", stdout);
-//    });
+        return dateIntervals.dateIntervalCollection
+            .mapValuesAsync(function (/**DateInterval*/dateInterval) {
+                return gitRepo.getAuthorsBetween(dateInterval.startDate, dateInterval.endDate);
+            });
+    })
+    .then(function (authors) {
+        // TODO: Re-arrange path structure.
+        commitData.setNode(['authors'].toPath(), authors.items);
+    })
+    .then(function () {
+        return dateIntervals.dateIntervalCollection
+            .mapValuesAsync(function (/**DateInterval*/dateInterval) {
+                return gitRepo.getClocAt(dateInterval.endDate);
+            });
+    })
+    .then(function (cloc) {
+        // TODO: Re-arrange path structure.
+        commitData.setNode(['cloc'].toPath(), cloc);
+
+        console.log(JSON.stringify(commitData.items, null, 2));
+    });
