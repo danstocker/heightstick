@@ -46,6 +46,18 @@ var GitRepo = troop.Base.extend()
         },
 
         /**
+         * Retrieves the date for the first commit on the current repo / branch.
+         * @returns {Q.Promise}
+         */
+        getFirstCommitDate: function () {
+            var gitArgs = ['log --format="%ci"', this.currentBranch, '| tail -n 1;'].join(' ');
+            return Git.execute(gitArgs)
+                .then(function (isoDateStr) {
+                    return new Date(isoDateStr);
+                });
+        },
+
+        /**
          * Retrieves list of authors for commits between the specified dates.
          * Includes commit count for each author listed.
          * @param {Date} startDate
@@ -54,7 +66,9 @@ var GitRepo = troop.Base.extend()
          */
         getAuthorsBetween: function (startDate, endDate) {
             var gitArgs = [
-                'log --after="', startDate.toISOString(), '" --before="', endDate.toISOString(), '" | grep Author: | sort | uniq -c'
+                'log --after="', startDate.toISOString(),
+                '" --before="', endDate.toISOString(),
+                '" | grep Author: | sort | uniq -c'
             ].join('');
 
             return Git.execute(gitArgs);
