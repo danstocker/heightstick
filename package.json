@@ -23,6 +23,7 @@
         "js/Argv.js",
         "js/DateInterval.js",
         "js/DateIntervals.js",
+        "js/AuthorsParser.js",
         "js/ClocParser.js",
         "js/Executable.js",
         "js/Git.js",
