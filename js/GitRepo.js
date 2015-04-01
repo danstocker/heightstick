@@ -68,7 +68,7 @@ var GitRepo = troop.Base.extend()
             var gitArgs = [
                 'log --after="', startDate.toISOString(),
                 '" --before="', endDate.toISOString(),
-                '" | grep Author: | sort | uniq -c'
+                '" ', this.currentBranch, ' | grep Author: | sort | uniq -c'
             ].join('');
 
             return Git.execute(gitArgs);
