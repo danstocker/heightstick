@@ -16,7 +16,8 @@ var sntls = require('sntls'),
         .setOptionDescriptions(sntls.Collection.create({
             "branch"    : "Branch being assessed. Defaults to 'master'.",
             "cloc-args" : "Argument list to be passed to CLOC.",
-            "resolution": "Time sampling resolution. Can be 'week' or 'month'. Defaults to 'month'."
+            //            "format": "Output format. Either 'json', 'csv', or 'raw-json' (default).",
+            "resolution": "Time sampling resolution. Can be 'week' or 'month' (default)."
         })),
     gitRepo = require('./GitRepo.js').create()
         .setCurrentBranch(argv.getArgumentValue('branch') || 'master')
