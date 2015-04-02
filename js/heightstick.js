@@ -17,20 +17,20 @@ var sntls = require('sntls'),
             "branch"    : "Branch being assessed. Defaults to 'master'.",
             "cloc-args" : "Argument list to be passed to CLOC.",
             //            "format": "Output format. Either 'json', 'csv', or 'raw-json' (default).",
-            "resolution": "Time sampling resolution. Can be 'week' or 'month' (default)."
+            "resolution": "Time sampling resolution. Can be 'weekly', 'biweekly', or 'monthly' (default)."
         })),
     gitRepo = require('./GitRepo.js').create()
         .setCurrentBranch(argv.getArgumentValue('branch') || 'master')
         .setClocArguments(argv.getArgumentValue('cloc-args') || '. --exclude-dir=node_modules'),
-    dateIntervals,
-    commitData = sntls.Tree.create();
+    growthStats = require('./GrowthStats.js').create(),
+    dateIntervals;
 
 if (argv.getArgumentValue('help')) {
     process.stdout.write(argv.toString());
 } else {
     gitRepo.getFirstCommitDate()
         .then(function (firstCommitDate) {
-            dateIntervals = DateIntervals.create(firstCommitDate, new Date(), argv.getArgumentValue('resolution') || 'month');
+            dateIntervals = DateIntervals.create(firstCommitDate, new Date(), argv.getArgumentValue('resolution') || 'monthly');
         })
         .then(function () {
             return dateIntervals.dateIntervalCollection
@@ -44,7 +44,7 @@ if (argv.getArgumentValue('help')) {
                     return AuthorsParser.parseTextOutput(authorsOutput);
                 })
                 .forEachItem(function (parsedAuthorsForDate, dateStr) {
-                    commitData.setNode([dateStr, 'authors'].toPath(), parsedAuthorsForDate);
+                    growthStats.addAuthors(dateStr, parsedAuthorsForDate);
                 });
         })
         .then(function () {
@@ -59,10 +59,10 @@ if (argv.getArgumentValue('help')) {
                     return ClocParser.parseCsvOutput(clocOutput);
                 })
                 .forEachItem(function (parsedClocForDate, dateStr) {
-                    commitData.setNode([dateStr, 'cloc'].toPath(), parsedClocForDate);
+                    growthStats.addCloc(dateStr, parsedClocForDate);
                 });
         })
         .then(function () {
-            process.stdout.write(JSON.stringify(commitData.items, null, 2));
+            process.stdout.write(JSON.stringify(growthStats.statStore.items, null, 2) + '\n');
         });
 }

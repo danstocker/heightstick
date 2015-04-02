@@ -3,7 +3,7 @@ Heightstick
 
 Command line codebase growth assessment tool for Git-based projects.
 
-Outputs a JSON containing author and LOC (lines of code) information for each month or week since the first commit.
+Outputs a JSON containing author and LOC (lines of code) information for each week, two weeks, or month since the first commit.
 
 Installation
 ------------
@@ -22,7 +22,7 @@ Run heightstick directly from under the repo.
 - `help`: Displays help screen.
 - `--cloc-args`: Arguments to be passed to Cloc. See the [Cloc documentation](http://cloc.sourceforge.net/) for details. Defaults to `". --exclude-dir=node_modules"`, which will run CLOC on the entire repo excluding `node_modules`.
 - `--branch`: Branch that heightstick will operate on. Defaults to `"master"`.
-- `--resolution`: Sampling resolution. Accepts `"week"` and `"month"`. Defaults to `"month"`.
+- `--resolution`: Sampling resolution. Accepts `"weekly"`, `"biweekly"` and `"monthly"`. Defaults to `"monthly"`.
 
 Example
 -------

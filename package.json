@@ -29,6 +29,7 @@
         "js/Git.js",
         "js/Cloc.js",
         "js/GitRepo.js",
+        "js/GrowthStats.js",
         "js/heightstick.js"
     ],
     "bin"         : {

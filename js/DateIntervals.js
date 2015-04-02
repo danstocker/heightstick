@@ -24,8 +24,9 @@ var DateIntervals = troop.Base.extend()
          * @constant
          */
         dateIntervalResolutions: {
-            week : 'week',
-            month: 'month'
+            weekly  : 'weekly',
+            biweekly: 'biweekly',
+            monthly : 'monthly'
         }
     })
     .addPrivateMethods(/** @lends DateIntervals# */{
@@ -37,6 +38,17 @@ var DateIntervals = troop.Base.extend()
         _addWeek: function (date) {
             var result = new Date(date);
             result.setDate(date.getDate() + 7);
+            return result;
+        },
+
+        /**
+         * @param {Date} date
+         * @returns {Date}
+         * @private
+         */
+        _addTwoWeeks: function (date) {
+            var result = new Date(date);
+            result.setDate(date.getDate() + 14);
             return result;
         },
 
@@ -58,10 +70,12 @@ var DateIntervals = troop.Base.extend()
          */
         _addUnit: function (date) {
             switch (this.resolution) {
-            case this.dateIntervalResolutions.week:
+            case this.dateIntervalResolutions.weekly:
                 return this._addWeek(date);
+            case this.dateIntervalResolutions.biweekly:
+                return this._addTwoWeeks(date);
             default:
-            case this.dateIntervalResolutions.month:
+            case this.dateIntervalResolutions.monthly:
                 return this._addMonth(date);
             }
         },
