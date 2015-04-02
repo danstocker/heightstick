@@ -39,9 +39,12 @@ var ClocParser = troop.Base.extend()
                 csvLines.slice(1)
                     .toCollection()
 
-                    // splitting up lines to rows
+                    // splitting up lines to rows and converting numeric fields to numbers
                     .mapValues(function (csvLine) {
-                        return csvLine.split(',');
+                        return csvLine.split(',')
+                            .map(function (csvField) {
+                                return parseInt(csvField, 10) || csvField;
+                            });
                     })
 
                     // keying by language
