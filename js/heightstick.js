@@ -17,7 +17,7 @@ var sntls = require('sntls'),
             "branch"    : "Branch being assessed. Defaults to 'master'.",
             "cloc-args" : "Argument list to be passed to CLOC.",
             //            "format": "Output format. Either 'json', 'csv', or 'raw-json' (default).",
-            "resolution": "Time sampling resolution. Can be 'weekly', 'biweekly', or 'monthly' (default)."
+            "sampling": "Date sampling resolution. Can be 'weekly', 'biweekly', or 'monthly' (default)."
         })),
     gitRepo = require('./GitRepo.js').create()
         .setCurrentBranch(argv.getArgumentValue('branch') || 'master')
@@ -30,7 +30,7 @@ if (argv.getArgumentValue('help')) {
 } else {
     gitRepo.getFirstCommitDate()
         .then(function (firstCommitDate) {
-            dateIntervals = DateIntervals.create(firstCommitDate, new Date(), argv.getArgumentValue('resolution') || 'monthly');
+            dateIntervals = DateIntervals.create(firstCommitDate, new Date(), argv.getArgumentValue('sampling') || 'monthly');
         })
         .then(function () {
             return dateIntervals.dateIntervalCollection

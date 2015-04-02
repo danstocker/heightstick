@@ -69,7 +69,7 @@ var DateIntervals = troop.Base.extend()
          * @private
          */
         _addUnit: function (date) {
-            switch (this.resolution) {
+            switch (this.sampling) {
             case this.dateIntervalResolutions.weekly:
                 return this._addWeek(date);
             case this.dateIntervalResolutions.biweekly:
@@ -96,14 +96,14 @@ var DateIntervals = troop.Base.extend()
         /**
          * @param {Date} startDate
          * @param {Date} endDate
-         * @param {string} resolution
+         * @param {string} sampling
          */
-        init: function (startDate, endDate, resolution) {
+        init: function (startDate, endDate, sampling) {
             dessert
                 .isDate(startDate, "Invalid start date")
                 .isDate(endDate, "Invalid end date")
                 .assert(+startDate < +endDate, "Invalid date bounds")
-                .isDateIntervalResolution(resolution, "Invalid resolution");
+                .isDateSamplingResolution(sampling, "Invalid sampling resolution");
 
             /** @type {sntls.Collection} */
             this.dateIntervalCollection = sntls.Collection.create();
@@ -115,7 +115,7 @@ var DateIntervals = troop.Base.extend()
             this.endDate = endDate;
 
             /** @type {string} */
-            this.resolution = resolution;
+            this.sampling = sampling;
 
             this._initializeDates();
         }
@@ -123,7 +123,7 @@ var DateIntervals = troop.Base.extend()
 
 dessert.addTypes(/** @lends dessert */{
     /** @param {string} expr */
-    isDateIntervalResolution: function (expr) {
+    isDateSamplingResolution: function (expr) {
         return expr && DateIntervals.dateIntervalResolutions[expr] === expr;
     }
 });
