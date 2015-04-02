@@ -63,6 +63,6 @@ if (argv.getArgumentValue('help')) {
                 });
         })
         .then(function () {
-            process.stdout.write(JSON.stringify(growthStats.statStore.items, null, 2) + '\n');
+            process.stdout.write(growthStats.getFlattenedCsv());
         });
 }
