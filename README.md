@@ -22,6 +22,7 @@ Run heightstick directly from under the repo.
 - `help`: Displays help screen.
 - `--cloc-args`: Arguments to be passed to Cloc. See the [Cloc documentation](http://cloc.sourceforge.net/) for details. Defaults to `". --exclude-dir=node_modules"`, which will run CLOC on the entire repo excluding `node_modules`.
 - `--branch`: Branch that heightstick will operate on. Defaults to `"master"`.
+- `--format`: Output format. Either `"json"`, `"csv"`, or `"raw-json"`.
 - `--sampling`: Sampling resolution. Accepts `"weekly"`, `"biweekly"` and `"monthly"`. Defaults to `"monthly"`.
 
 Example

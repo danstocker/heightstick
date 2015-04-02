@@ -14,10 +14,10 @@ var sntls = require('sntls'),
             "help": "Displays this help"
         }))
         .setOptionDescriptions(sntls.Collection.create({
-            "branch"    : "Branch being assessed. Defaults to 'master'.",
-            "cloc-args" : "Argument list to be passed to CLOC.",
-            //            "format": "Output format. Either 'json', 'csv', or 'raw-json' (default).",
-            "sampling": "Date sampling resolution. Can be 'weekly', 'biweekly', or 'monthly' (default)."
+            "branch"   : "Branch being assessed. Defaults to 'master'.",
+            "cloc-args": "Argument list to be passed to CLOC.",
+            "format"   : "Output format. Either 'json' (default), 'csv', or 'raw-json'.",
+            "sampling" : "Date sampling resolution. Can be 'weekly', 'biweekly', or 'monthly' (default)."
         })),
     gitRepo = require('./GitRepo.js').create()
         .setCurrentBranch(argv.getArgumentValue('branch') || 'master')
@@ -63,6 +63,20 @@ if (argv.getArgumentValue('help')) {
                 });
         })
         .then(function () {
-            process.stdout.write(growthStats.getFlattenedCsv());
+            switch (argv.getArgumentValue('format')) {
+            case 'csv':
+                process.stdout.write(growthStats.getFlattenedCsv());
+                break;
+
+            default:
+            case 'json':
+                process.stdout.write(growthStats.getFlattenedJson());
+                break;
+
+            case 'raw-json':
+                process.stdout.write(growthStats.getRawJson());
+                break;
+
+            }
         });
 }

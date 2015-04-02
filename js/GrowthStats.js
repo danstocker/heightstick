@@ -124,6 +124,13 @@ var GrowthStats = troop.Base.extend()
         /**
          * @returns {string}
          */
+        getRawJson: function () {
+            return JSON.stringify(this.statsLookup.items, null, 2) + '\n';
+        },
+
+        /**
+         * @returns {string}
+         */
         getFlattenedJson: function () {
             return JSON.stringify(this._getFlattenedStats().items, null, 2) + '\n';
         },
