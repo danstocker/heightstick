@@ -8,7 +8,9 @@ Outputs a JSON containing author and LOC (lines of code) information for each mo
 Installation
 ------------
 
-    npm install -g heightstick
+1. Make sure you have git installed.
+2. Install [CLOC](http://cloc.sourceforge.net/).
+3. Install heightstick: `npm install -g heightstick`
 
 Usage
 -----
