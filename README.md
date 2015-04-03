@@ -3,7 +3,7 @@ Heightstick
 
 Command line codebase growth assessment tool for Git-based projects.
 
-Outputs a JSON containing author and LOC (lines of code) information for each week, two weeks, or month since the first commit.
+Outputs JSON or CSV containing repo information for each week, two weeks, or month between the first and last commits.
 
 Installation
 ------------
@@ -30,35 +30,12 @@ Example
 
 The following command, when ran under heightstick's repo,
 
-    heightstick --cloc-args="js"
+    heightstick --cloc-args="js" --format=csv
 
-gives the JSON below (as of 04/02/2015):
+gives the CSV below (as of 04/03/2015):
 
-    {
-      "2015-05-01T13:25:59.000Z": {
-        "authors": {
-          "dan.stocker@mangahigh.com": {
-            "commits": 11,
-            "name": "Dan Stocker ",
-            "email": "dan.stocker@mangahigh.com"
-          },
-          "dan@kwaia.com": {
-            "commits": 4,
-            "name": "Dan Stocker ",
-            "email": "dan@kwaia.com"
-          }
-        },
-        "cloc": {
-          "Javascript": {
-            "files": "11",
-            "language": "Javascript",
-            "blank": "78",
-            "comment": "231",
-            "code": "386"
-          }
-        }
-      }
-    }
+    date,committerCount,totalCommitCount,medianCommitCount,normalizedTeamSize,netCodeSize,grossCodeSize,documentationRatio
+    "2015-05-01","2","29","17","1.7058823529411764","555","966","0.3167701863354037"
 
 Credits
 -------
