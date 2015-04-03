@@ -34,25 +34,26 @@ var GrowthStats = troop.Base.extend()
         _getCommitStats: function (authors) {
             var authorLookup = sntls.Collection.create(authors),
                 authorCount = authorLookup.getKeyCount(),
+                medianIndex = Math.min(Math.ceil(authorCount / 2), authorCount - 1),
 
             // summing commit count
-                totalCommitCount = authorLookup
+                totalCommitCount = authorCount && authorLookup
                     .getValues()
                     .reduce(function (previous, current) {
                         return previous + current.commits;
                     }, 0),
 
             // getting median commit count
-                medianCommitCount = authorLookup
+                medianCommitCount = authorCount && authorLookup
                     .collectProperty('commits')
                     .getValues()
                     .sort(function (a, b) {return a > b ? 1 : a < b ? -1 : 0;})
-                    [Math.ceil(authorCount / 2)];
+                    [medianIndex];
 
             return {
                 totalCommitCount  : totalCommitCount,
                 medianCommitCount : medianCommitCount,
-                normalizedTeamSize: totalCommitCount / medianCommitCount
+                normalizedTeamSize: totalCommitCount && totalCommitCount / medianCommitCount
             };
         },
 
@@ -114,7 +115,7 @@ var GrowthStats = troop.Base.extend()
                     }, {net: 0, gross: 0});
 
             // returning net / gross ratio
-            return fullCloc.net / fullCloc.gross;
+            return fullCloc.net && fullCloc.net / fullCloc.gross;
         },
 
         /**
