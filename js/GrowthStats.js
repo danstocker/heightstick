@@ -17,14 +17,43 @@ var troop = require('troop'),
 var GrowthStats = troop.Base.extend()
     .addPrivateMethods(/** @lends GrowthStats# */{
         /**
-         * TODO: Add a more intelligent estimation of team size based on commit distribution.
          * @param {object} authors
          * @returns {number}
          * @private
          */
-        _getTeamSize: function (authors) {
+        _getCommitterCount: function (authors) {
             return sntls.Collection.create(authors)
                 .getKeyCount();
+        },
+
+        /**
+         * @param {object} authors
+         * @returns {object}
+         * @private
+         */
+        _getCommitStats: function (authors) {
+            var authorLookup = sntls.Collection.create(authors),
+                authorCount = authorLookup.getKeyCount(),
+
+            // summing commit count
+                totalCommitCount = authorLookup
+                    .getValues()
+                    .reduce(function (previous, current) {
+                        return previous + current.commits;
+                    }, 0),
+
+            // getting median commit count
+                medianCommitCount = authorLookup
+                    .collectProperty('commits')
+                    .getValues()
+                    .sort(function (a, b) {return a > b ? 1 : a < b ? -1 : 0;})
+                    [Math.ceil(authorCount / 2)];
+
+            return {
+                totalCommitCount  : totalCommitCount,
+                medianCommitCount : medianCommitCount,
+                normalizedTeamSize: totalCommitCount / medianCommitCount
+            };
         },
 
         /**
@@ -35,8 +64,8 @@ var GrowthStats = troop.Base.extend()
         _getNetCodeSize: function (cloc) {
             return sntls.Tree.create(cloc)
                 .queryValues('|>code'.toQuery())
-                .reduce(function (current, previous) {
-                    return current + previous;
+                .reduce(function (previous, current) {
+                    return previous + current;
                 }, 0);
         },
 
@@ -51,8 +80,8 @@ var GrowthStats = troop.Base.extend()
                     return clocForLanguage.code + clocForLanguage.comment + clocForLanguage.blank;
                 })
                 .getValues()
-                .reduce(function (current, previous) {
-                    return current + previous;
+                .reduce(function (previous, current) {
+                    return previous + current;
                 }, 0);
         },
 
@@ -77,10 +106,10 @@ var GrowthStats = troop.Base.extend()
 
                     // getting overall net & gross cloc
                     .getValues()
-                    .reduce(function (current, previous) {
+                    .reduce(function (previous, current) {
                         return {
-                            net  : current.net + previous.net,
-                            gross: current.gross + previous.gross
+                            net  : previous.net + current.net,
+                            gross: previous.gross + current.gross
                         };
                     }, {net: 0, gross: 0});
 
@@ -96,9 +125,14 @@ var GrowthStats = troop.Base.extend()
             var that = this;
             return this.statsLookup.toCollection()
                 .mapValues(function (statsForDate, dateStr) {
+                    var commitStats = that._getCommitStats(statsForDate.authors);
+
                     return {
                         date              : dateStr.substr(0, 10),
-                        teamSize          : that._getTeamSize(statsForDate.authors),
+                        committerCount    : that._getCommitterCount(statsForDate.authors),
+                        totalCommitCount  : commitStats.totalCommitCount,
+                        medianCommitCount : commitStats.medianCommitCount,
+                        normalizedTeamSize: commitStats.normalizedTeamSize,
                         netCodeSize       : that._getNetCodeSize(statsForDate.cloc),
                         grossCodeSize     : that._getGrossCodeSize(statsForDate.cloc),
                         documentationRatio: that._getDocumentationRatio(statsForDate.cloc)
