@@ -97,7 +97,7 @@ var GrowthStats = troop.Base.extend()
             return this.statsLookup.toCollection()
                 .mapValues(function (statsForDate, dateStr) {
                     return {
-                        date              : dateStr,
+                        date              : dateStr.substr(0, 10),
                         teamSize          : that._getTeamSize(statsForDate.authors),
                         netCodeSize       : that._getNetCodeSize(statsForDate.cloc),
                         grossCodeSize     : that._getGrossCodeSize(statsForDate.cloc),
