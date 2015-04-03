@@ -50,7 +50,19 @@ var GitRepo = troop.Base.extend()
          * @returns {Q.Promise}
          */
         getFirstCommitDate: function () {
-            var gitArgs = ['log --format="%ci"', this.currentBranch, '| tail -n 1;'].join(' ');
+            var gitArgs = ['log --format="%ci"', this.currentBranch, ' | tail -n 1;'].join(' ');
+            return Git.execute(gitArgs)
+                .then(function (isoDateStr) {
+                    return new Date(isoDateStr);
+                });
+        },
+
+        /**
+         * Retrieves the date for the last commit on the current repo / branch.
+         * @returns {Q.Promise}
+         */
+        getLastCommitDate: function () {
+            var gitArgs = ['log --format="%ci"', this.currentBranch, ' -n 1;'].join(' ');
             return Git.execute(gitArgs)
                 .then(function (isoDateStr) {
                     return new Date(isoDateStr);

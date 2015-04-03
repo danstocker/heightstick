@@ -23,14 +23,27 @@ var sntls = require('sntls'),
         .setCurrentBranch(argv.getArgumentValue('branch') || 'master')
         .setClocArguments(argv.getArgumentValue('cloc-args') || '. --exclude-dir=node_modules'),
     growthStats = require('./GrowthStats.js').create(),
+    firstCommitDate, lastCommitDate,
     dateIntervals;
 
 if (argv.getArgumentValue('help')) {
     process.stdout.write(argv.toString());
 } else {
     gitRepo.getFirstCommitDate()
-        .then(function (firstCommitDate) {
-            dateIntervals = DateIntervals.create(firstCommitDate, new Date(), argv.getArgumentValue('sampling') || 'monthly');
+        .then(function (date) {
+            firstCommitDate = date;
+        })
+        .then(function () {
+            return gitRepo.getLastCommitDate();
+        })
+        .then(function (date) {
+            lastCommitDate = date;
+        })
+        .then(function () {
+            dateIntervals = DateIntervals.create(
+                firstCommitDate,
+                lastCommitDate,
+                argv.getArgumentValue('sampling') || 'monthly');
         })
         .then(function () {
             return dateIntervals.dateIntervalCollection
