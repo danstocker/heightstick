@@ -63,17 +63,29 @@ var GrowthStats = troop.Base.extend()
          */
         _getDocumentationRatio: function (cloc) {
             var clocByLanguage = sntls.Collection.create(cloc),
-                languageCount = clocByLanguage.getKeyCount();
+                fullCloc = clocByLanguage
 
-            return clocByLanguage
-                .mapValues(function (clocForLanguage) {
-                    var grossCodeSize = clocForLanguage.code + clocForLanguage.comment + clocForLanguage.blank;
-                    return clocForLanguage.comment / grossCodeSize;
-                })
-                .getValues()
-                .reduce(function (current, previous) {
-                    return current + previous;
-                }, 0);
+                    // calculating net & gross for each language
+                    .mapValues(function (clocForLanguage) {
+                        return {
+                            net  : clocForLanguage.comment,
+                            gross: clocForLanguage.code +
+                                   clocForLanguage.comment +
+                                   clocForLanguage.blank
+                        };
+                    })
+
+                    // getting overall net & gross cloc
+                    .getValues()
+                    .reduce(function (current, previous) {
+                        return {
+                            net  : current.net + previous.net,
+                            gross: current.gross + previous.gross
+                        };
+                    }, {net: 0, gross: 0});
+
+            // returning net / gross ratio
+            return fullCloc.net / fullCloc.gross;
         },
 
         /**
