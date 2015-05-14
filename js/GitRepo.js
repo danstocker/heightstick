@@ -93,7 +93,7 @@ var GitRepo = troop.Base.extend()
          */
         checkoutAt: function (date) {
             var gitArgs = [
-                'checkout `git rev-list -n 1 --before="', date.toISOString(), '" ', this.currentBranch, '`'
+                'checkout --force `git rev-list -n 1 --before="', date.toISOString(), '" ', this.currentBranch, '`'
             ].join('');
 
             return Git.execute(gitArgs);
