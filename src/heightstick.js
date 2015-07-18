@@ -4,7 +4,7 @@
 
 require('./Collection.js');
 
-var giant = require('giant-cli-tools'),
+var giant = require('giant-data'),
     Q = require('q'),
     DateIntervals = require('./DateIntervals.js'),
     AuthorsParser = require('./AuthorsParser.js'),
