@@ -8,7 +8,6 @@ require('giant-assertion');
 require('giant-oop');
 require('giant-data');
 
-
 /**
  * @name DateIntervals.create
  * @function
@@ -102,7 +101,7 @@ var DateIntervals = giant.Base.extend()
          * @param {string} sampling
          */
         init: function (startDate, endDate, sampling) {
-            dessert
+            giant
                 .isDate(startDate, "Invalid start date")
                 .isDate(endDate, "Invalid end date")
                 .assert(+startDate < +endDate, "Invalid date bounds")
