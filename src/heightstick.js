@@ -51,7 +51,7 @@ if (argv.getArgumentValue('help')) {
                     return gitRepo.getAuthorsBetween(dateInterval.startDate, dateInterval.endDate);
                 });
         })
-        .then(function (/**sntls.Collection*/authors) {
+        .then(function (/**giant.Collection*/authors) {
             authors
                 .mapValues(function (authorsOutput) {
                     return AuthorsParser.parseTextOutput(authorsOutput);

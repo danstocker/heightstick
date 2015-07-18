@@ -21,20 +21,20 @@
         "q"              : "^1.2.0"
     },
     "files"       : [
-        "js/Collection.js",
-        "js/Argv.js",
-        "js/DateInterval.js",
-        "js/DateIntervals.js",
-        "js/AuthorsParser.js",
-        "js/ClocParser.js",
-        "js/Executable.js",
-        "js/Git.js",
-        "js/Cloc.js",
-        "js/GitRepo.js",
-        "js/GrowthStats.js",
-        "js/heightstick.js"
+        "src/Collection.js",
+        "src/Argv.js",
+        "src/DateInterval.js",
+        "src/DateIntervals.js",
+        "src/AuthorsParser.js",
+        "src/ClocParser.js",
+        "src/Executable.js",
+        "src/Git.js",
+        "src/Cloc.js",
+        "src/GitRepo.js",
+        "src/GrowthStats.js",
+        "src/heightstick.js"
     ],
     "bin"         : {
-        "heightstick": "js/heightstick.js"
+        "heightstick": "src/heightstick.js"
     }
 }
