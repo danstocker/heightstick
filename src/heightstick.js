@@ -31,27 +31,39 @@ if (argv.getArgumentValue('help')) {
 } else {
     gitRepo.getFirstCommitDate()
         .then(function (date) {
+            console.error("*** first commit date", date);
+
             firstCommitDate = date;
         })
         .then(function () {
             return gitRepo.getLastCommitDate();
         })
         .then(function (date) {
+            console.error("*** last commit date", date);
+
             lastCommitDate = date;
         })
         .then(function () {
+            console.error("*** obtaining date intervals");
+
             dateIntervals = DateIntervals.create(
                 firstCommitDate,
                 lastCommitDate,
                 argv.getArgumentValue('sampling') || 'monthly');
+
+            console.error("*** date interval count", dateIntervals.dateIntervalCollection.getKeyCount());
         })
         .then(function () {
+            console.error("*** getting authors for each interval");
+
             return dateIntervals.dateIntervalCollection
                 .mapValuesAsync(function (/**DateInterval*/dateInterval) {
                     return gitRepo.getAuthorsBetween(dateInterval.startDate, dateInterval.endDate);
                 });
         })
         .then(function (/**giant.Collection*/authors) {
+            console.error("*** parsing author information");
+
             authors
                 .mapValues(function (authorsOutput) {
                     return AuthorsParser.parseTextOutput(authorsOutput);
@@ -61,12 +73,16 @@ if (argv.getArgumentValue('help')) {
                 });
         })
         .then(function () {
+            console.error("*** getting CLOC info");
+
             return dateIntervals.dateIntervalCollection
                 .mapValuesAsync(function (/**DateInterval*/dateInterval) {
                     return gitRepo.getClocAt(dateInterval.endDate);
                 });
         })
         .then(function (/**giant.Collection*/cloc) {
+            console.error("*** processing CLOC info");
+
             cloc
                 .mapValues(function (clocOutput) {
                     return ClocParser.parseCsvOutput(clocOutput);
@@ -76,6 +92,8 @@ if (argv.getArgumentValue('help')) {
                 });
         })
         .then(function () {
+            console.error("*** generating output");
+
             switch (argv.getArgumentValue('format')) {
             case 'csv':
                 process.stdout.write(growthStats.getFlattenedCsv());

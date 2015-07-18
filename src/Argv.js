@@ -2,7 +2,7 @@
 "use strict";
 
 var giant = require('giant-namespace'),
-argv = process.argv;
+    argv = process.argv;
 
 require('giant-oop');
 require('giant-data');
