@@ -1,9 +1,12 @@
 /* jshint node:true */
 "use strict";
 
-var troop = require('troop'),
+var giant = require('giant-namespace'),
     Git = require('./Git.js'),
     Cloc = require('./Cloc.js');
+
+require('giant-oop');
+require('giant-data');
 
 /**
  * @name GitRepo.create
@@ -13,9 +16,9 @@ var troop = require('troop'),
 
 /**
  * @class
- * @extends troop.Base
+ * @extends giant.Base
  */
-var GitRepo = troop.Base.extend()
+var GitRepo = giant.Base.extend()
     .addMethods(/** @lends GitRepo# */{
         /** @ignore */
         init: function () {

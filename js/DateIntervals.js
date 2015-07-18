@@ -1,10 +1,13 @@
 /* jshint node:true */
 "use strict";
 
-var dessert = require('dessert'),
-    troop = require('troop'),
-    sntls = require('sntls'),
+var giant = require('giant-namespace'),
     DateInterval = require('./DateInterval.js');
+
+require('giant-assertion');
+require('giant-oop');
+require('giant-data');
+
 
 /**
  * @name DateIntervals.create
@@ -15,9 +18,9 @@ var dessert = require('dessert'),
 
 /**
  * @class
- * @extends troop.Base
+ * @extends giant.Base
  */
-var DateIntervals = troop.Base.extend()
+var DateIntervals = giant.Base.extend()
     .addConstants(/** @lends DateIntervals */{
         /**
          * @type {object}
@@ -105,8 +108,8 @@ var DateIntervals = troop.Base.extend()
                 .assert(+startDate < +endDate, "Invalid date bounds")
                 .isDateSamplingResolution(sampling, "Invalid sampling resolution");
 
-            /** @type {sntls.Collection} */
-            this.dateIntervalCollection = sntls.Collection.create();
+            /** @type {giant.Collection} */
+            this.dateIntervalCollection = giant.Collection.create();
 
             /** @type {Date} */
             this.startDate = startDate;
@@ -121,7 +124,7 @@ var DateIntervals = troop.Base.extend()
         }
     });
 
-dessert.addTypes(/** @lends dessert */{
+giant.addTypes(/** @lends giant */{
     /** @param {string} expr */
     isDateSamplingResolution: function (expr) {
         return expr && DateIntervals.dateIntervalResolutions[expr] === expr;

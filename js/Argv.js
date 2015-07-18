@@ -1,15 +1,17 @@
 /* jshint node:true */
 "use strict";
 
-var troop = require('troop'),
-    sntls = require('sntls'),
-    argv = process.argv;
+var giant = require('giant-namespace'),
+argv = process.argv;
+
+require('giant-oop');
+require('giant-data');
 
 /**
  * @class
- * @extends troop.Base
+ * @extends giant.Base
  */
-var Argv = troop.Base.extend()
+var Argv = giant.Base.extend()
     .setInstanceMapper(function () {
         return 'singleton';
     })
@@ -27,10 +29,10 @@ var Argv = troop.Base.extend()
         executablePath: argv[1],
 
         /**
-         * @type {sntls.Collection}
+         * @type {giant.Collection}
          * @constant
          */
-        args: sntls.Collection.create(argv.slice(2))
+        args: giant.Collection.create(argv.slice(2))
     })
     .addPrivateMethods(/** @lends Argv */{
         /**
@@ -52,7 +54,7 @@ var Argv = troop.Base.extend()
 
         /**
          * Creates an lookup object based on the argument list.
-         * @returns {sntls.Collection}
+         * @returns {giant.Collection}
          * @private
          */
         _parseArguments: function () {
@@ -71,13 +73,13 @@ var Argv = troop.Base.extend()
         init: function () {
             this.elevateMethod('_extractKeyValuePair');
 
-            /** @type {sntls.Collection} */
-            this.flagDescriptions = sntls.Collection.create();
+            /** @type {giant.Collection} */
+            this.flagDescriptions = giant.Collection.create();
 
-            /** @type {sntls.Collection} */
-            this.optionDescriptions = sntls.Collection.create();
+            /** @type {giant.Collection} */
+            this.optionDescriptions = giant.Collection.create();
 
-            /** @type {sntls.Collection} */
+            /** @type {giant.Collection} */
             this.parsedArguments = this._parseArguments();
         },
 
@@ -90,7 +92,7 @@ var Argv = troop.Base.extend()
         },
 
         /**
-         * @param {sntls.Collection} flagDescriptions
+         * @param {giant.Collection} flagDescriptions
          * @returns {Argv}
          */
         setFlagDescriptions: function (flagDescriptions) {
@@ -99,7 +101,7 @@ var Argv = troop.Base.extend()
         },
 
         /**
-         * @param {sntls.Collection} optionDescriptions
+         * @param {giant.Collection} optionDescriptions
          * @returns {Argv}
          */
         setOptionDescriptions: function (optionDescriptions) {

@@ -1,10 +1,12 @@
 /* jshint node:true */
 "use strict";
 
-var sntls = require('sntls'),
+var giant = require('giant-namespace'),
     Q = require('q');
 
-sntls.Collection.addMethods(/** @lends sntls.Collection# */{
+require('giant-data');
+
+giant.Collection.addMethods(/** @lends giant.Collection# */{
     /**
      * Same as Collection.mapValues, but asynchronous. Handler is expected to return a Q promise.
      * TODO: Add test.
@@ -12,7 +14,7 @@ sntls.Collection.addMethods(/** @lends sntls.Collection# */{
      * @returns {Q.Promise}
      */
     mapValuesAsync: function (handler) {
-        var sourceItems = sntls.Utils.shallowCopy(this.items),
+        var sourceItems = giant.Utils.shallowCopy(this.items),
             keys = Object.keys(sourceItems),
             resultItems = {},
             deferred = Q.defer(),
@@ -28,7 +30,7 @@ sntls.Collection.addMethods(/** @lends sntls.Collection# */{
                     });
                 i++;
             } else {
-                deferred.resolve(sntls.Collection.create(resultItems));
+                deferred.resolve(giant.Collection.create(resultItems));
             }
         }());
 

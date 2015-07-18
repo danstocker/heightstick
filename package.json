@@ -13,10 +13,12 @@
         "url" : "https://github.com/danstocker/heightstick.git"
     },
     "dependencies": {
-        "dessert": "~0.3.2",
-        "q"      : "^1.2.0",
-        "sntls"  : "~0.19.0",
-        "troop"  : "~0.8.0"
+        "giant-assertion": "0.0.4",
+        "giant-data"     : "0.0.4",
+        "giant-namespace": "0.0.4",
+        "giant-oop"      : "0.0.4",
+        "giant-utils"    : "0.0.4",
+        "q"              : "^1.2.0"
     },
     "files"       : [
         "js/Collection.js",

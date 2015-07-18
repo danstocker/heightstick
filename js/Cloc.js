@@ -5,7 +5,7 @@ var Executable = require('./Executable.js');
 
 /**
  * @class
- * @extends troop.Base
+ * @extends Executable
  */
 var Cloc = Executable.extend()
     .addConstants(/** @lends Cloc */{

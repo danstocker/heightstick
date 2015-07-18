@@ -2,14 +2,16 @@
 "use strict";
 
 var exec = require('child_process').exec,
-    troop = require('troop'),
+    giant = require('giant-namespace'),
     Q = require('q');
+
+require('giant-oop');
 
 /**
  * @class
- * @extends troop.Base
+ * @extends giant.Base
  */
-var Executable = troop.Base.extend()
+var Executable = giant.Base.extend()
     .addConstants(/** @lends Executable */{
         /**
          * @type {string}

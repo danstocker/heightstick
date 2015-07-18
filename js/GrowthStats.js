@@ -1,8 +1,10 @@
 /* jshint node:true */
 "use strict";
 
-var troop = require('troop'),
-    sntls = require('sntls');
+var giant = require('giant-namespace');
+
+require('giant-oop');
+require('giant-data');
 
 /**
  * @name GrowthStats.create
@@ -12,9 +14,9 @@ var troop = require('troop'),
 
 /**
  * @class
- * @extends troop.Base
+ * @extends giant.Base
  */
-var GrowthStats = troop.Base.extend()
+var GrowthStats = giant.Base.extend()
     .addPrivateMethods(/** @lends GrowthStats# */{
         /**
          * @param {object} authors
@@ -22,7 +24,7 @@ var GrowthStats = troop.Base.extend()
          * @private
          */
         _getCommitterCount: function (authors) {
-            return sntls.Collection.create(authors)
+            return giant.Collection.create(authors)
                 .getKeyCount();
         },
 
@@ -32,7 +34,7 @@ var GrowthStats = troop.Base.extend()
          * @private
          */
         _getCommitStats: function (authors) {
-            var authorLookup = sntls.Collection.create(authors),
+            var authorLookup = giant.Collection.create(authors),
                 authorCount = authorLookup.getKeyCount(),
                 medianIndex = Math.min(Math.ceil(authorCount / 2), authorCount - 1),
 
@@ -63,7 +65,7 @@ var GrowthStats = troop.Base.extend()
          * @private
          */
         _getNetCodeSize: function (cloc) {
-            return sntls.Tree.create(cloc)
+            return giant.Tree.create(cloc)
                 .queryValues('|>code'.toQuery())
                 .reduce(function (previous, current) {
                     return previous + current;
@@ -76,7 +78,7 @@ var GrowthStats = troop.Base.extend()
          * @private
          */
         _getGrossCodeSize: function (cloc) {
-            return sntls.Collection.create(cloc)
+            return giant.Collection.create(cloc)
                 .mapValues(function (clocForLanguage) {
                     return clocForLanguage.code + clocForLanguage.comment + clocForLanguage.blank;
                 })
@@ -92,7 +94,7 @@ var GrowthStats = troop.Base.extend()
          * @private
          */
         _getDocumentationRatio: function (cloc) {
-            var clocByLanguage = sntls.Collection.create(cloc),
+            var clocByLanguage = giant.Collection.create(cloc),
                 fullCloc = clocByLanguage
 
                     // calculating net & gross for each language
@@ -119,7 +121,7 @@ var GrowthStats = troop.Base.extend()
         },
 
         /**
-         * @returns {sntls.Collection}
+         * @returns {giant.Collection}
          * @private
          */
         _getFlattenedStats: function () {
@@ -144,8 +146,8 @@ var GrowthStats = troop.Base.extend()
     .addMethods(/** @lends GrowthStats# */{
         /** @ignore */
         init: function () {
-            /** @type {sntls.Tree} */
-            this.statsLookup = sntls.Tree.create();
+            /** @type {giant.Tree} */
+            this.statsLookup = giant.Tree.create();
         },
 
         /**
@@ -189,12 +191,12 @@ var GrowthStats = troop.Base.extend()
             var flattenedStats = this._getFlattenedStats(),
                 csvBuffer = [
                     // CSV header
-                    sntls.Hash.create(flattenedStats.getFirstValue()).getKeys()
+                    giant.Hash.create(flattenedStats.getFirstValue()).getKeys()
                 ];
 
             return csvBuffer.concat(flattenedStats
                     .mapValues(function (statsRecord) {
-                        return sntls.Collection.create(statsRecord)
+                        return giant.Collection.create(statsRecord)
                             .mapValues(function (statsField) {
                                 switch (typeof statsField) {
                                 case 'string':

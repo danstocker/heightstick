@@ -1,7 +1,9 @@
 /* jshint node:true */
 "use strict";
 
-var troop = require('troop');
+var giant = require('giant-namespace');
+
+require('giant-oop');
 
 /**
  * @name DateInterval.create
@@ -13,9 +15,9 @@ var troop = require('troop');
 
 /**
  * @class
- * @extends troop.Base
+ * @extends giant.Base
  */
-var DateInterval = troop.Base.extend()
+var DateInterval = giant.Base.extend()
     .addMethods(/** @lends DateInterval# */{
         /**
          * @param {Date} startDate

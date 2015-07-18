@@ -4,16 +4,16 @@
 
 require('./Collection.js');
 
-var sntls = require('sntls'),
+var giant = require('giant-cli-tools'),
     Q = require('q'),
     DateIntervals = require('./DateIntervals.js'),
     AuthorsParser = require('./AuthorsParser.js'),
     ClocParser = require('./ClocParser.js'),
     argv = require('./Argv.js').create()
-        .setFlagDescriptions(sntls.Collection.create({
+        .setFlagDescriptions(giant.Collection.create({
             "help": "Displays this help"
         }))
-        .setOptionDescriptions(sntls.Collection.create({
+        .setOptionDescriptions(giant.Collection.create({
             "branch"   : "Branch being assessed. Defaults to 'master'.",
             "cloc-args": "Argument list to be passed to CLOC.",
             "format"   : "Output format. Either 'json' (default), 'csv', or 'raw-json'.",
@@ -66,7 +66,7 @@ if (argv.getArgumentValue('help')) {
                     return gitRepo.getClocAt(dateInterval.endDate);
                 });
         })
-        .then(function (/**sntls.Collection*/cloc) {
+        .then(function (/**giant.Collection*/cloc) {
             cloc
                 .mapValues(function (clocOutput) {
                     return ClocParser.parseCsvOutput(clocOutput);

@@ -1,14 +1,16 @@
 /* jshint node:true */
 "use strict";
 
-var troop = require('troop'),
-    sntls = require('sntls');
+var giant = require('giant-namespace');
+
+require('giant-oop');
+require('giant-data');
 
 /**
  * @class
- * @extends troop.Base
+ * @extends giant.Base
  */
-var ClocParser = troop.Base.extend()
+var ClocParser = giant.Base.extend()
     .addConstants(/** @lends ClocParser */{
         /**
          * @type {RegExp}
