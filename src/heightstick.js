@@ -23,7 +23,7 @@ var giant = require('giant-data'),
             "format"   : 'json',
             "sampling" : 'monthly'
         }),
-    cliArguments = process.argv.toCliArguments()
+    cliArguments = process.argv.toArgv().toCliArguments()
         .setExpectedArguments(cliExpectedArguments),
     gitRepo = require('./GitRepo.js').create()
         .setCurrentBranch(cliArguments.getArgumentValue('branch'))
@@ -32,7 +32,7 @@ var giant = require('giant-data'),
     firstCommitDate, lastCommitDate,
     dateIntervals;
 
-if (cliArguments.argumentCollection.getKeyCount() === 2) {
+if (!cliArguments.getArgumentCount() || cliArguments.getArgumentValue('help')) {
     process.stdout.write([
         "Heightstick Codebase Assessment Tool http://npmjs.org/heightstick",
         cliExpectedArguments.getHelpString()
