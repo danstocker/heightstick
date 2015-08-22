@@ -3,31 +3,40 @@
 'use strict';
 
 require('./Collection.js');
+require('giant-cli-tools');
 
 var giant = require('giant-data'),
     Q = require('q'),
     DateIntervals = require('./DateIntervals.js'),
     AuthorsParser = require('./AuthorsParser.js'),
     ClocParser = require('./ClocParser.js'),
-    argv = require('./Argv.js').create()
-        .setFlagDescriptions(giant.Collection.create({
-            "help": "Displays this help"
-        }))
-        .setOptionDescriptions(giant.Collection.create({
-            "branch"   : "Branch being assessed. Defaults to 'master'.",
+    cliExpectedArguments = giant.CliExpectedArguments.create()
+        .setArgumentDescriptions({
+            "branch"   : "Branch being assessed.",
             "cloc-args": "Argument list to be passed to CLOC.",
-            "format"   : "Output format. Either 'json' (default), 'csv', or 'raw-json'.",
-            "sampling" : "Date sampling resolution. Can be 'weekly', 'biweekly', or 'monthly' (default)."
-        })),
+            "format"   : "Output format. Either 'json', 'csv', or 'raw-json'.",
+            "sampling" : "Date sampling resolution. Can be 'weekly', 'biweekly', or 'monthly'."
+        })
+        .setDefaultValues({
+            "branch"   : 'master',
+            "cloc-args": '. --exclude-dir=node_modules',
+            "format"   : 'json',
+            "sampling" : 'monthly'
+        }),
+    cliArguments = process.argv.toCliArguments()
+        .setExpectedArguments(cliExpectedArguments),
     gitRepo = require('./GitRepo.js').create()
-        .setCurrentBranch(argv.getArgumentValue('branch') || 'master')
-        .setClocArguments(argv.getArgumentValue('cloc-args') || '. --exclude-dir=node_modules'),
+        .setCurrentBranch(cliArguments.getArgumentValue('branch'))
+        .setClocArguments(cliArguments.getArgumentValue('cloc-args')),
     growthStats = require('./GrowthStats.js').create(),
     firstCommitDate, lastCommitDate,
     dateIntervals;
 
-if (argv.getArgumentValue('help')) {
-    process.stdout.write(argv.toString());
+if (cliArguments.argumentCollection.getKeyCount() === 2) {
+    process.stdout.write([
+        "Heightstick Codebase Assessment Tool http://npmjs.org/heightstick",
+        cliExpectedArguments.getHelpString()
+    ].join('\n'));
 } else {
     gitRepo.getFirstCommitDate()
         .then(function (date) {
@@ -49,7 +58,7 @@ if (argv.getArgumentValue('help')) {
             dateIntervals = DateIntervals.create(
                 firstCommitDate,
                 lastCommitDate,
-                argv.getArgumentValue('sampling') || 'monthly');
+                cliArguments.getArgumentValue('sampling'));
 
             console.error("*** date interval count", dateIntervals.dateIntervalCollection.getKeyCount());
         })
@@ -94,7 +103,7 @@ if (argv.getArgumentValue('help')) {
         .then(function () {
             console.error("*** generating output");
 
-            switch (argv.getArgumentValue('format')) {
+            switch (cliArguments.getArgumentValue('format')) {
             case 'csv':
                 process.stdout.write(growthStats.getFlattenedCsv());
                 break;
@@ -107,7 +116,6 @@ if (argv.getArgumentValue('help')) {
             case 'raw-json':
                 process.stdout.write(growthStats.getRawJson());
                 break;
-
             }
         });
 }

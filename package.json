@@ -22,7 +22,6 @@
     },
     "files"       : [
         "src/Collection.js",
-        "src/Argv.js",
         "src/DateInterval.js",
         "src/DateIntervals.js",
         "src/AuthorsParser.js",
